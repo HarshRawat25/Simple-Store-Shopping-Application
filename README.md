@@ -61,6 +61,8 @@ Before deploying, set production environment variables such as `DJANGO_SECRET_KE
 
 <img width="1902" height="915" alt="image" src="https://github.com/user-attachments/assets/43f6f275-fd67-4bca-be2f-6501390e0c07" />
 
+<img width="1891" height="901" alt="image" src="https://github.com/user-attachments/assets/f2ca25df-4d45-438f-9056-3b14e8fa5a9b" />
+
 
 ## License
 
