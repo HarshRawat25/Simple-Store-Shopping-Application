@@ -20,6 +20,33 @@ A Django e-commerce storefront for clothing and electronics. It includes authent
 - PostgreSQL support for production
 - HTML, CSS, JavaScript, Font Awesome
 
+## Application workflow
+
+```mermaid
+flowchart TD
+    A[Open SimpleStore] --> B{Authenticated?}
+    B -- No --> C[Login or register]
+    C --> D[Optional: select Remember me]
+    D --> E[Home page]
+    B -- Yes --> E
+    E --> F[Browse categories or search products]
+    F --> G[Open product details]
+    G --> H[Add product to cart]
+    H --> I[Review cart]
+    I --> J[Proceed to checkout]
+    J --> K[Order confirmation]
+    E --> L[Profile and order history]
+    L --> M[Secure logout]
+    M --> C
+```
+
+1. A visitor creates an account or signs in. Selecting **Remember me** keeps the session active on that device.
+2. After authentication, the visitor reaches the home page and can browse categories or search the full catalogue.
+3. Selecting a product opens its detail page, including price, description, reviews, and related products.
+4. The visitor adds products to the session-based cart, reviews quantities and totals, then proceeds to checkout.
+5. After checkout, an order confirmation is shown. Signed-in users can view their order history from their profile.
+6. Logout securely ends the session and returns the visitor to the login page.
+
 ## Run locally
 
 Open PowerShell in the project directory and run:
