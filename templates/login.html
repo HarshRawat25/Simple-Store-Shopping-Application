@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <main class="auth-page">
+        <div class="auth-layout">
+        <aside class="auth-visual" aria-hidden="true">
+            <img src="{% static 'images/login-visual.png' %}" alt="">
+            <div class="auth-visual-copy">
+                <span>SimpleStore</span>
+                <p>Everything you love, thoughtfully selected.</p>
+            </div>
+        </aside>
+        <section class="auth-card" aria-labelledby="login-title">
+        <h1 id="login-title">Welcome back</h1>
+        <p class="auth-intro">Sign in to browse SimpleStore and manage your cart.</p>
+        <form method="post">
+            {% csrf_token %}
+            {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+            {{ form.non_field_errors }}
+            <p>
+                <label for="{{ form.username.id_for_label }}">Username</label>
+                {{ form.username }}
+            </p>
+            <p>
+                <label for="{{ form.password.id_for_label }}">Password</label>
+                {{ form.password }}
+            </p>
+            <label class="remember-me"><input type="checkbox" name="remember_me"> Remember me on this device</label>
+            <button type="submit" class="btn auth-submit">Login</button>
+        </form>
+        <p class="auth-switch">Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+        </section>
+        </div>
+    </main>
+{% endblock %}

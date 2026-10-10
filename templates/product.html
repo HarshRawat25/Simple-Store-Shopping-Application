@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <main class="container">
+        <div class="product-detail-container">
+            <div class="product-detail-image">
+                {% if product.image_url %}
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                {% else %}
+                    <div class="missing-product-image"><i class="fa-solid fa-image" aria-hidden="true"></i><span>Image unavailable</span></div>
+                {% endif %}
+            </div>
+            <div class="product-detail-info">
+                <h1>{{ product.name }}</h1>
+                <div class="rating-summary">
+                    <span class="stars">
+                        {% for i in "12345" %}
+                            <i class="fa-solid fa-star"
+                               style="color: {% if forloop.counter <= avg_rating %}#f6ad55{% else %}#cbd5e0{% endif %};"></i>
+                        {% endfor %}
+                        <span class="rating-text">({{ avg_rating|floatformat:1 }} / 5)</span>
+                    </span>
+                </div>
+                <p class="price-tag">
+                    {% if product.is_on_sale %}
+                        <span class="old-price">₹{{ product.price }}</span>
+                        <span class="new-price">₹{{ product.discount_price }}</span>
+                    {% else %}
+                        <span class="current-price">₹{{ product.price }}</span>
+                    {% endif %}
+                </p>
+                <p class="description">{{ product.description }}</p>
+                <button class="btn" onclick="ajaxAddToCart({{ product.id }})">Add to Cart</button>
+            </div>
+        </div>
+
+        <section class="reviews-section">
+            <h2 style="margin-top: 3rem;">Customer Reviews</h2>
+            <div class="reviews-grid">
+                <div class="review-form-container">
+                    <h3 style="margin-bottom: 1rem;">Leave a Review</h3>
+                    {% if user.is_authenticated %}
+                        <form action="{% url 'add_review' product.id %}" method="POST">
+                            {% csrf_token %}
+                            <div class="rating-input">
+                                <label>Rating:</label>
+                                <select name="rating">
+                                    <option value="5">5 Stars</option>
+                                    <option value="4">4 Stars</option>
+                                    <option value="3">3 Stars</option>
+                                    <option value="2">2 Stars</option>
+                                    <option value="1">1 Star</option>
+                                </select>
+                            </div>
+                            <textarea name="comment" placeholder="Share your experience..." required style="width: 100%; margin-bottom: 1rem; padding: 0.5rem; border-radius: 8px;"></textarea>
+                            <button type="submit" class="btn">Submit Review</button>
+                        </form>
+                    {% else %}
+                        <p>Please <a href="{% url 'login' %}">login</a> to leave a review.</p>
+                    {% endif %}
+                </div>
+                <div class="reviews-list">
+                    {% for review in reviews %}
+                    <div class="review-card">
+                        <div class="review-header">
+                            <span class="review-user">{{ review.user.username }}</span>
+                            <span class="review-rating">
+                                {% for i in "12345" %}
+                                    <i class="fa-solid fa-star" style="color: #f6ad55; font-size: 0.8rem;"></i>
+                                {% endfor %}
+                            </span>
+                        </div>
+                        <p class="review-comment">{{ review.comment }}</p>
+                        <span class="review-date">{{ review.created_at|date:"M d, Y" }}</span>
+                    </div>
+                    {% empty %}
+                    <p>No reviews yet. Be the first to review this product!</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        {% if related_products %}
+        <section class="related-products">
+            <h2 style="margin-top: 3rem;">Similar Products</h2>
+            <div class="product-grid">
+                {% for rel in related_products %}
+                <div class="product-card">
+                    {% if rel.image_url %}
+                        <img src="{{ rel.image_url }}" alt="{{ rel.name }}" loading="lazy">
+                    {% else %}
+                        <div class="product-image-fallback"><i class="fa-solid fa-image" aria-hidden="true"></i></div>
+                    {% endif %}
+                    <h3>{{ rel.name }}</h3>
+                    <p>₹{{ rel.current_price }}</p>
+                    <a href="{% url 'product_detail' rel.id %}" class="btn">View Details</a>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+    </main>
+
+    <style>
+        .rating-summary {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .rating-text {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+        }
+        .reviews-section {
+            margin-top: 4rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+        }
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+        .review-form-container {
+            background: var(--surface-color);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            height: fit-content;
+        }
+        .rating-input {
+            margin-bottom: 1rem;
+        }
+        .rating-input label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .review-card {
+            background: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+        }
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .review-user {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        .review-date {
+            font-size: 0.8rem;
+            color: #a0aec0;
+            display: block;
+            margin-top: 0.5rem;
+        }
+        .related-products {
+            margin-top: 4rem;
+        }
+    </style>
+{% endblock %}

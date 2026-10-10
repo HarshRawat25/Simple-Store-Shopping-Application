@@ -1,0 +1,61 @@
+import os
+import django
+
+# Setup Django environment
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ecommerce_project.settings')
+django.setup()
+
+from store.models import Category, Product
+
+def seed_croma_style_store():
+    print("🚀 Seeding Croma-style product dataset...")
+
+    # 1. Define categories
+    categories_data = [
+        {'name': 'Laptops & Tablets', 'slug': 'laptops-tablets'},
+        {'name': 'Mobiles', 'slug': 'mobiles'},
+        {'name': 'Audio & Headphones', 'slug': 'audio'},
+        {'name': 'Home Appliances', 'slug': 'appliances'},
+        {'name': 'Cameras & Accessories', 'slug': 'cameras'},
+    ]
+
+    category_objs = {}
+    for data in categories_data:
+        cat, created = Category.objects.get_or_create(
+            name=data['name'],
+            defaults={'slug': data['slug']}
+        )
+        category_objs[data['name']] = cat
+        print(f"Category: {cat.name} {'created' if created else 'exists'}")
+
+    # 2. Croma-inspired dataset with realistic image URLs from Unsplash
+    products_to_seed = [
+        # Laptops & Tablets
+        {'name': 'MacBook Air M2', 'cat': 'Laptops & Tablets', 'price': 114900.00, 'discount': 104900.00, 'featured': True, 'img': 'https://images.unsplash.com/photo-1517336714731-4641958696a0?auto=format&fit=crop&w=500&q=80'},
+        {'name': 'Dell XPS 13', 'cat': 'Laptops & Tablets', 'price': 125000.00, 'discount': 119000.00, 'featured': False, 'img': 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=500&q=80'},
+        {'name': 'iPad Pro M2', 'cat': 'Laptops & Tablets', 'price': 82900.00, 'discount': 78900.00, 'featured': True, 'img': 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=500&q=80'},
+
+        # Mobiles
+        {'name': 'iPhone 15 Pro', 'cat': 'Mobiles', 'price': 134900.00, 'discount': 129900.00, 'featured': True, 'img': 'https://images.unsplash.com/photo-1696446701796-da6136bc7ca2?auto=format&fit=crop&w=500&q=80'},
+        {'name': 'Samsung Galaxy S23 Ultra', 'cat': 'Mobiles', 'price': 124999.00, 'discount': 114999.00, 'featured': True, 'img': 'https://images.unsplash.com/photo-1678911820866-a250a6f3bcC?auto=format&fit=crop&w=500&q=80'},
+        {'name': 'Google Pixel 8', 'cat': 'Mobiles', 'price': 75999.00, 'discount': 69999.00, 'featured': False, 'img': 'https://images.unsplash.com/photo-1610945265064-785aC9777494?auto=format&fit=crop&w=500&q=80'},
+
+        # Audio & Headphones
+        {'name': 'Sony WH-1000XM5', 'cat': 'Audio & Headphones', 'price': 29990.00, 'discount': 24990.00, 'featured': True, 'img': 'https://images.unsplash.com/photo-1505740420928-5e5647145e3d?auto=format&fit=crop&w=500&q=80'},
+        {'name': 'Apple AirPods Pro 2', 'cat': 'Audio & Headphones', 'price': 24900.00, 'discount': 21900.00, 'featured': True, 'img': 'https://images.unsplash.com/photo-1588423770574-9109f1fca86c?auto=format&fit=crop&w=500&q=80'},
+        {'name': 'Bose QuietComfort 45', 'cat': 'Audio & Headphones', 'price': 32000.00, 'discount': 27000.00, 'featured': False, 'img': 'https://images.unsplash.com/photo-1546435770-a3e43e5?auto=format&fit=crop&w=500&q=80'},
+
+        # Home Appliances
+        {'name': 'Samsung OLED TV 55"', 'cat': 'Home Appliances', 'price': 150000.00, 'discount': 135000.00, 'featured': True, 'img': 'https://images.unsplash.com/photo-1593359677873-573681972670?auto=format&fit=crop&w=500&q=80'},
+        {'name': 'LG Front Load Washer', 'cat': 'Home Appliances', 'price': 45000.00, 'discount': 39999.00, 'featured': False, 'img': 'https://images.unsplash.com/photo-1626806819282-27d66766277c?auto=format&fit=crop&w=500&q=80'},
+        {'name': 'Dyson V15 Vacuum', 'cat': 'Home Appliances', 'price': 65000.00, 'discount': 58000.00, 'featured': True, 'img': 'https://images.unsplash.com/photo-1558317374-067fb5f3697ed?auto=format&fit=crop&w=500&q=80'},
+
+        # Cameras
+        {'name': 'Canon EOS R6', 'cat': 'Cameras & Accessories', 'price': 220000.00, 'discount': 195000.00, 'featured': False, 'img': 'https://images.unsplash.com/photo-1516035069371-2?auto=format&fit=crop&w=500&q=80'},
+        {'name': 'Sony Alpha a7 IV', 'cat': 'Cameras & Accessories', 'price': 210000.00, 'discount': 189000.00, 'featured': True, 'img': 'https://images.unsplash.com/photo-1516035064581-6ed8d004a271?auto=format&fit=crop&w=500&q=80'},
+        {'name': 'GoPro Hero 12', 'cat': 'Cameras & Accessories', 'price': 42000.00, 'discount': 37999.00, 'featured': True, 'img': 'https://images.unsplash.com/photo-1520333789090-1?auto=format&fit=crop&w=500&q=80'},
+    ]
+
+    for p_data in products_to_seed:
+        product, created = Product.objects.update_or_create(
+            name=p_//... (truncated for brevity)

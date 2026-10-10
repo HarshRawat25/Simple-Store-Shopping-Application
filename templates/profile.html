@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="profile-header">
+        <h1>My Account</h1>
+        <p>Welcome back, {{ user.username }}!</p>
+    </div>
+
+    <div class="profile-grid">
+        <div class="profile-sidebar">
+            <div class="profile-card">
+                <h3>Account Details</h3>
+                <p><strong>Username:</strong> {{ user.username }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+            </div>
+            <div class="profile-card">
+                <h3>Quick Actions</h3>
+                <ul class="profile-actions">
+                    <li><a href="{% url 'home' %}">Continue Shopping</a></li>
+                    <li><a href="{% url 'cart_view' %}">View Cart</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="profile-main">
+            <h3>Your Order History</h3>
+            {% if orders %}
+                <div class="orders-list">
+                    {% for order in orders %}
+                    <div class="order-card">
+                        <div class="order-info">
+                            <p><strong>Order #{{ order.id }}</strong></p>
+                            <p>Date: {{ order.created_at|date:"M d, Y" }}</p>
+                            <p>Status: <span class="status-{{ order.status|lower }}">{{ order.status }}</span></p>
+                        </div>
+                        <div class="order-details">
+                            <p>Total: <strong>₹{{ order.total_price }}</strong></p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>You haven't placed any orders yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.profile-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+.profile-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+}
+.profile-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    margin-bottom: 1.5rem;
+}
+.profile-card h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+.profile-actions {
+    list-style: none;
+    padding: 0;
+}
+.profile-actions li {
+    margin-bottom: 0.5rem;
+}
+.profile-actions li a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+.order-card {
+    background: white;
+    padding: 1.25rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.order-info p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+.status-pending { color: #d69e2e; font-weight: bold; }
+.status-paid { color: #38a169; font-weight: bold; }
+.status-shipped { color: #3182ce; font-weight: bold; }
+.status-delivered { color: #2f855a; font-weight: bold; }
+</style>
+{% endblock %}

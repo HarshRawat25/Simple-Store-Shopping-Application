@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <main class="container">
+        <h1 style="text-align: center; margin-bottom: 2rem;">Your Shopping Cart</h1>
+        <div class="cart-wrapper">
+            <div id="cart-items" class="cart-items">
+                {% for item in cart_items %}
+                <div class="cart-item">
+                    <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}">
+                    <div class="cart-item-info">
+                        <h3>{{ item.product.name }}</h3>
+                        <p>Qty: {{ item.quantity }} | ₹{{ item.product.price }} each</p>
+                    </div>
+                    <button class="remove-btn" onclick="ajaxRemoveFromCart({{ item.product.id }})">Remove</button>
+                </div>
+                {% empty %}
+                <p>Your cart is currently empty.</p>
+                {% endfor %}
+            </div>
+            <div class="cart-summary">
+                <h2>Order Summary</h2>
+                <p>Total: <span id="cart-total">₹{{ total }}</span></p>
+                <a href="{% url 'checkout' %}" class="btn" style="width: 100%; text-align: center;">Proceed to Checkout</a>
+            </div>
+        </div>
+    </main>
+{% endblock %}

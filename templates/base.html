@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Store</title>
+    {% load static %}
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="announcement-bar">
+        <p>🪔 Festive Sale: Up to 50% Off! <a href="{% url 'home' %}">Shop Now</a></p>
+    </div>
+    <header>
+        <nav>
+            <div class="logo" onclick="window.location.href='{% url 'home' %}';">
+
+                <i class="fa-solid fa-bag-shopping"></i> SimpleStore
+            </div>
+            {% if user.is_authenticated %}
+                <form action="{% url 'home' %}" method="GET" class="search-bar">
+                    <input type="text" id="live-search" name="q" placeholder="Search for products..." value="{{ query|default:'' }}">
+                    <button type="submit" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </form>
+                <ul class="nav-links">
+                <li class="category-dropdown">
+                    <button class="category-toggle" type="button" aria-haspopup="true">
+                        Categories <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        {% for category in categories %}
+                        <li><a href="{% url 'category_detail' category.slug %}">{{ category.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li><a href="{% url 'home' %}"><i class="fa-solid fa-house"></i> Home</a></li>
+                <li><a href="{% url 'cart_view' %}"><i class="fa-solid fa-cart-shopping"></i> Cart (<span id="cart-count" data-count="{{ request.session.cart|length }}">0</span>)</a></li>
+                <li><a href="{% url 'profile' %}"><i class="fa-solid fa-user"></i> Profile</a></li>
+                <li>
+                    <form method="post" action="{% url 'logout' %}" class="logout-form">
+                        {% csrf_token %}
+                        <button type="submit"><i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Logout</button>
+                    </form>
+                </li>
+                </ul>
+            {% else %}
+                <ul class="nav-links auth-nav">
+                    <li><a href="{% url 'login' %}"><i class="fa-solid fa-right-to-bracket"></i> Login</a></li>
+                    <li><a href="{% url 'register' %}"><i class="fa-solid fa-user-plus"></i> Register</a></li>
+                </ul>
+            {% endif %}
+        </nav>
+    </header>
+
+    {% block content %}{% endblock %}
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>SimpleStore</h3>
+                <p>Your one-stop destination for quality products at unbeatable prices.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'cart_view' %}">Cart</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Shipping Policy</a></li>
+                    <li><a href="#">Returns & Refunds</a></li>
+                    <li><a href="#">FAQs</a></li>
+                </ul>
+            </div>
+        </div>
+        <p class="copyright">&copy; 2026 SimpleStore. All rights reserved.</p>
+    </footer>
+
+    <div id="toast-container"></div>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
