@@ -59,7 +59,8 @@ Before deploying, set production environment variables such as `DJANGO_SECRET_KE
 
 ## Screenshots
 
-Add screenshots of the home page, login page, product details, and cart here.
+<img width="1902" height="915" alt="image" src="https://github.com/user-attachments/assets/43f6f275-fd67-4bca-be2f-6501390e0c07" />
+
 
 ## License
 
